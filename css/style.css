@@ -1,0 +1,187 @@
+:root {
+    --bg-main: #0B0F19;
+    --bg-darker: #060911;
+    --bg-card: rgba(18, 24, 38, 0.65);
+    --primary: #2563eb;
+    --primary-soft: rgba(37, 99, 235, 0.12);
+    --secondary: #94A3B8;
+    --border-glass: rgba(255, 255, 255, 0.07);
+    --border-glass-hover: rgba(37, 99, 235, 0.25);
+    --text-main: #F8FAFC;
+}
+
+body {
+    background-color: var(--bg-main) !important;
+    color: var(--text-main) !important;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Layout Container Lock */
+.max-w-container {
+    max-width: 1200px;
+}
+
+/* Navigation Refinement */
+.bg-navbar {
+    background-color: rgba(6, 9, 11, 0.8) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-glass);
+    transition: all 0.3s ease;
+}
+
+.nav-link {
+    color: var(--secondary) !important;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.25s ease;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    color: #FFF !important;
+}
+
+/* Typography Elevation */
+.font-display {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.text-primary {
+    color: #60a5fa !important;
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: .5;
+        transform: scale(0.92);
+    }
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Glassmorphic Components */
+.glass-card {
+    background: var(--bg-card) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-glass) !important;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--border-glass-hover) !important;
+    box-shadow: 0 12px 40px 0 rgba(37, 99, 235, 0.12);
+}
+
+/* Timeline Components */
+.timeline-row {
+    background: rgba(18, 24, 38, 0.3);
+    border: 1px solid var(--border-glass) !important;
+    transition: all 0.3s ease;
+}
+
+.timeline-row:hover {
+    border-color: var(--border-glass-hover) !important;
+    background: rgba(37, 99, 235, 0.03) !important;
+}
+
+/* Interactive Buttons */
+.btn-primary {
+    background-color: var(--primary) !important;
+    border: none !important;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8 !important;
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+}
+
+.btn-outline-custom {
+    border: 2px solid var(--border-glass) !important;
+    color: #FFF !important;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-custom:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-color: #FFF !important;
+}
+
+/* Decorative Layout Utilities */
+.icon-wrapper {
+    background-color: var(--primary-soft) !important;
+    color: #60a5fa !important;
+    padding: 12px;
+    border-radius: 12px;
+    display: inline-flex;
+}
+
+.project-thumbnail-wrapper {
+    border: 1px solid var(--border-glass);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+}
+
+.project-thumbnail-wrapper img {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-thumbnail-wrapper:hover img {
+    transform: scale(1.04);
+}
+
+.form-control {
+    background-color: rgba(6, 9, 17, 0.7) !important;
+    border: 1px solid var(--border-glass) !important;
+    color: #FFF !important;
+}
+
+.form-control::placeholder {
+    color: #4b5563;
+}
+
+.form-control:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.2) !important;
+}
+
+.bg-surface-container-low {
+    background-color: var(--bg-darker) !important;
+}
+
+.bg-inverse-surface {
+    background-color: #030712 !important;
+    border-top: 1px solid var(--border-glass);
+    border-bottom: 1px solid var(--border-glass);
+}
+
+.bg-surface-container-high {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Smooth Custom Spacing Adjustments */
+.section-padding {
+    padding-top: clamp(60px, 8vw, 100px) !important;
+    padding-bottom: clamp(60px, 8vw, 100px) !important;
+}
