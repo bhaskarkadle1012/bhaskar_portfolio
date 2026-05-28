@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "https://api.web3forms.com/submit"
+                "Accept": "application/json"   // <--- Make sure this says "application/json"
             },
             body: jsonPayload
         })
