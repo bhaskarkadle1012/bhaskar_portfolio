@@ -1,3 +1,6 @@
+/* ==========================================================================
+   DESIGN VARIABLES & STYLE THEME TOKENS
+   ========================================================================== */
 :root {
     --bg-main: #0B0F19;
     --bg-darker: #060911;
@@ -8,6 +11,7 @@
     --border-glass: rgba(255, 255, 255, 0.07);
     --border-glass-hover: rgba(37, 99, 235, 0.25);
     --text-main: #F8FAFC;
+    --cubic-premium: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body {
@@ -23,28 +27,105 @@ body {
     max-width: 1200px;
 }
 
-/* Navigation Refinement */
+/* ==========================================================================
+   SCROLL-DRIVEN INTERSECTION OBSERVER ANIMATION ENGINE
+   ========================================================================== */
+.reveal-on-scroll {
+    opacity: 0;
+    will-change: transform, opacity;
+    transition: transform 0.9s var(--cubic-premium), opacity 0.9s var(--cubic-premium);
+}
+
+/* Fade In Up Variant */
+.reveal-on-scroll.fade-in-up {
+    transform: translateY(40px);
+}
+
+/* Slide In Left Variant */
+.reveal-on-scroll.slide-in-left {
+    transform: translateX(-50px);
+}
+
+/* Slide In Right Variant */
+.reveal-on-scroll.slide-in-right {
+    transform: translateX(50px);
+}
+
+/* Activated State managed via JavaScript intersection rules */
+.reveal-on-scroll.active {
+    opacity: 1;
+    transform: translate(0) !important;
+}
+
+/* Staggered Delay Utility Handlers for Layout Groups */
+.reveal-on-scroll.active:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.reveal-on-scroll.active:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.reveal-on-scroll.active:nth-child(3) {
+    transition-delay: 0.3s;
+}
+
+.reveal-on-scroll.active:nth-child(4) {
+    transition-delay: 0.4s;
+}
+
+/* ==========================================================================
+   NAVIGATION INTERACTION POLISH
+   ========================================================================== */
 .bg-navbar {
     background-color: rgba(6, 9, 11, 0.8) !important;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border-glass);
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.nav-link {
+.logo-hover {
+    transition: text-shadow 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+}
+
+.logo-hover:hover {
+    text-shadow: 0 0 12px rgba(37, 99, 235, 0.6);
+    transform: scale(1.02);
+}
+
+.nav-link-hover {
     color: var(--secondary) !important;
     font-size: 0.95rem;
     font-weight: 500;
+    position: relative;
     transition: color 0.25s ease;
 }
 
-.nav-link:hover,
-.nav-link:focus {
+.nav-link-hover::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary);
+    transition: width 0.3s var(--cubic-premium);
+}
+
+.nav-link-hover:hover::after {
+    width: 100%;
+}
+
+.nav-link-hover:hover,
+.nav-link-hover:focus {
     color: #FFF !important;
 }
 
-/* Typography Elevation */
+/* ==========================================================================
+   TYPOGRAPHY ELEVATION & HERO EFFECTS
+   ========================================================================== */
 .font-display {
     font-family: 'Plus Jakarta Sans', sans-serif !important;
     font-weight: 800;
@@ -55,18 +136,42 @@ body {
     color: #60a5fa !important;
 }
 
-/* Pulse Animation */
+.gradient-brand-text {
+    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #2563eb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+    animation: textShimmer 4s linear infinite;
+}
+
+@keyframes textShimmer {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Status Pulse Animation */
 @keyframes pulse {
 
     0%,
     100% {
         opacity: 1;
         transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4);
     }
 
     50% {
-        opacity: .5;
+        opacity: .6;
         transform: scale(0.92);
+        box-shadow: 0 0 8px 2px rgba(40, 167, 69, 0.2);
     }
 }
 
@@ -74,23 +179,69 @@ body {
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Glassmorphic Components */
+/* Continuous Subtle Floating Hero Element Graphic Layout */
+@keyframes floatSystem {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+.image-float-effect {
+    animation: floatSystem 6s ease-in-out infinite;
+}
+
+.interactive-profile-img {
+    transition: filter 0.5s ease, transform 0.5s var(--cubic-premium);
+}
+
+.image-float-effect:hover .interactive-profile-img {
+    transform: scale(1.02);
+}
+
+/* ==========================================================================
+   INTERACTIVE BENTO GRID COMPONENTS
+   ========================================================================== */
 .glass-card {
     background: var(--bg-card) !important;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border-glass) !important;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.4s var(--cubic-premium);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
-.glass-card:hover {
-    transform: translateY(-6px);
+.hover-lift-effect:hover {
+    transform: translateY(-6px) scale(1.01);
     border-color: var(--border-glass-hover) !important;
-    box-shadow: 0 12px 40px 0 rgba(37, 99, 235, 0.12);
+    box-shadow: 0 12px 40px 0 rgba(37, 99, 235, 0.15);
 }
 
-/* Timeline Components */
+.bounce-icon-box {
+    transition: transform 0.3s var(--cubic-premium);
+}
+
+.hover-lift-effect:hover .bounce-icon-box {
+    transform: scale(1.12) rotate(3deg);
+}
+
+.badge-hover-pulse {
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.hover-lift-effect:hover .badge-hover-pulse {
+    background-color: rgba(37, 99, 235, 0.15) !important;
+    color: #FFF !important;
+}
+
+/* ==========================================================================
+   TIMELINE COMPONENTS
+   ========================================================================== */
 .timeline-row {
     background: rgba(18, 24, 38, 0.3);
     border: 1px solid var(--border-glass) !important;
@@ -100,35 +251,98 @@ body {
 .timeline-row:hover {
     border-color: var(--border-glass-hover) !important;
     background: rgba(37, 99, 235, 0.03) !important;
+    transform: translateX(4px);
 }
 
-/* Interactive Buttons */
-.btn-primary {
-    background-color: var(--primary) !important;
-    border: none !important;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    transition: all 0.2s ease;
+.timeline-date-badge {
+    transition: transform 0.3s var(--cubic-premium);
 }
 
-.btn-primary:hover {
-    background-color: #1d4ed8 !important;
-    box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+.timeline-row:hover .timeline-date-badge {
+    transform: scale(1.04);
 }
 
-.btn-outline-custom {
+/* ==========================================================================
+   CASE STUDIES & IMAGE SCALERS
+   ========================================================================== */
+.text-hover-link-glow {
+    color: var(--primary);
+    text-decoration: none;
+    transition: text-shadow 0.2s ease, color 0.2s ease;
+}
+
+.text-hover-link-glow:hover {
+    color: #60a5fa;
+    text-shadow: 0 0 8px rgba(96, 165, 250, 0.5);
+}
+
+.project-thumbnail-wrapper {
+    border: 1px solid var(--border-glass);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    position: relative;
+}
+
+.live-zoom-image {
+    transition: transform 0.7s var(--cubic-premium), filter 0.5s ease;
+}
+
+.inline-image-scale-container:hover .live-zoom-image {
+    transform: scale(1.05);
+}
+
+/* Checklist entrance transitions managed through javascript parent states */
+.single-check-node {
+    opacity: 0;
+    transform: translateX(-15px);
+    transition: opacity 0.5s ease, transform 0.5s var(--cubic-premium);
+}
+
+.reveal-on-scroll.active .single-check-node {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.reveal-on-scroll.active .single-check-node:nth-child(1) {
+    transition-delay: 0.3s;
+}
+
+.reveal-on-scroll.active .single-check-node:nth-child(2) {
+    transition-delay: 0.4s;
+}
+
+/* ==========================================================================
+   INTERACTIVE BUTTONS & TRANSITIONS
+   ========================================================================== */
+.btn-animate-fill {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.btn-animate-fill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4) !important;
+}
+
+.btn-animate-fill:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.btn-animate-outline {
     border: 2px solid var(--border-glass) !important;
     color: #FFF !important;
     font-weight: 600;
     transition: all 0.2s ease;
 }
 
-.btn-outline-custom:hover {
+.btn-animate-outline:hover {
     background-color: rgba(255, 255, 255, 0.05) !important;
     border-color: #FFF !important;
+    transform: translateY(-2px);
 }
 
-/* Decorative Layout Utilities */
 .icon-wrapper {
     background-color: var(--primary-soft) !important;
     color: #60a5fa !important;
@@ -137,35 +351,38 @@ body {
     display: inline-flex;
 }
 
-.project-thumbnail-wrapper {
-    border: 1px solid var(--border-glass);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-    overflow: hidden;
-}
-
-.project-thumbnail-wrapper img {
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.project-thumbnail-wrapper:hover img {
-    transform: scale(1.04);
-}
-
+/* ==========================================================================
+   FORM CONTROLS REFINEMENT
+   ========================================================================== */
 .form-control {
     background-color: rgba(6, 9, 17, 0.7) !important;
     border: 1px solid var(--border-glass) !important;
     color: #FFF !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .form-control::placeholder {
     color: #4b5563;
 }
 
-.form-control:focus {
+.input-focus-glow:focus {
     border-color: var(--primary) !important;
-    box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.2) !important;
+    box-shadow: 0 0 16px rgba(37, 99, 235, 0.25) !important;
 }
 
+/* Form container glow animation */
+.transition-form-glow {
+    transition: box-shadow 0.5s ease, border-color 0.5s ease;
+}
+
+.transition-form-glow:focus-within {
+    box-shadow: 0 0 30px rgba(37, 99, 235, 0.08);
+    border-color: rgba(37, 99, 235, 0.2) !important;
+}
+
+/* ==========================================================================
+   SURFACE BACKGROUND MODIFIERS
+   ========================================================================== */
 .bg-surface-container-low {
     background-color: var(--bg-darker) !important;
 }
