@@ -1,108 +1,119 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    // ==========================================================================
-    // 1. SCROLL-DRIVEN ENTRANCE ANIMATION INTERSECTION OBSERVER
-    // ==========================================================================
-    const observerOptions = {
-        root: null, // Relative to the browser viewport
-        rootMargin: "0px",
-        threshold: 0.15 // Triggers when 15% of the element is visible
-    };
+    /* ══════════════════════════════════════════════
+       1. WORK — TAB SWITCHER
+    ══════════════════════════════════════════════ */
+    const tabBtns   = document.querySelectorAll('.work-tab-btn');
+    const tabPanels = document.querySelectorAll('.work-tab-panel');
 
-    const scrollObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Add the class that triggers the CSS transition rules
-                entry.target.classList.add("active");
-                // Stop observing once the element has smoothly animated in
-                observer.unobserve(entry.target);
-            }
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.dataset.tab;
+
+            // Update button states
+            tabBtns.forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-selected', 'false');
+            });
+            btn.classList.add('active');
+            btn.setAttribute('aria-selected', 'true');
+
+            // Show/hide panels
+            tabPanels.forEach(panel => {
+                if (panel.id === `tab-${target}`) {
+                    panel.classList.remove('d-none');
+                    // Re-trigger reveal for any items in this panel
+                    panel.querySelectorAll('.reveal:not(.is-visible)').forEach(el => {
+                        // Small delay so the fade-in animation fires
+                        requestAnimationFrame(() => revealObserver.observe(el));
+                    });
+                } else {
+                    panel.classList.add('d-none');
+                }
+            });
         });
-    }, observerOptions);
-
-    // Bind the observer engine to every layout hook we configured in your HTML
-    const elementsToReveal = document.querySelectorAll(".reveal-on-scroll");
-    elementsToReveal.forEach(element => {
-        scrollObserver.observe(element);
     });
 
-    // ==========================================================================
-    // 2. HIGH-CONVERTING ASYNC FORM HANDLER & UI TRANSITIONS
-    // ==========================================================================
-    const form = document.getElementById("contact-form");
-    const submitBtn = document.getElementById("submit-btn");
-    const btnText = document.getElementById("btn-text");
-    const btnIcon = document.getElementById("btn-icon");
-    const responseContainer = document.getElementById("form-response");
 
-    if (form) {
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+    /* ══════════════════════════════════════════════
+       2. HERO CLASSES
+    ══════════════════════════════════════════════ */
+    // Already applied via class names in HTML — just trigger the cursor blink
+    const accentSpan = document.querySelector('main section:first-child h1 .text-primary');
+    if (accentSpan) {
+        setTimeout(() => {
+            accentSpan.classList.add('cursor-blink');
+            setTimeout(() => accentSpan.classList.remove('cursor-blink'), 3200);
+        }, 1400);
+    }
 
-            // Trigger Bootstrap client-side validation UI structure
-            if (!form.checkValidity()) {
-                form.classList.add("was-validated");
-                return; // Halt submission if fields are incomplete or invalid
-            }
 
-            // Adjust UI elements to interactive loading state
-            form.classList.remove("was-validated");
-            submitBtn.disabled = true;
-            btnText.innerText = "Sending...";
+    /* ══════════════════════════════════════════════
+       3. SCROLL-REVEAL
+    ══════════════════════════════════════════════ */
+    const prefersReducedMotion =
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-            // Swap to a refreshing material symbol and inject our style spin filter
-            btnIcon.innerText = "sync";
-            btnIcon.classList.add("animation-spin-node");
+    // Expose revealObserver so tab switcher can use it
+    let revealObserver;
 
-            // Hide any existing success/error alerts from previous attempts
-            responseContainer.classList.add("d-none");
-
-            // Compile Form Data into clean JSON payload structural mappings
-            const formData = new FormData(form);
-            const jsonObject = Object.fromEntries(formData.entries());
-            const jsonPayload = JSON.stringify(jsonObject);
-
-            // Fetch Request pipeline out to Web3Forms infrastructure
-            fetch("https://api.web3forms.com/submit", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                body: jsonPayload
-            })
-                .then(async (response) => {
-                    let resData = await response.json();
-
-                    if (response.status === 200) {
-                        // Success Handling Execution
-                        showFeedback("Thank you! Your message has been sent successfully.", "alert-success");
-                        form.reset(); // Clear all user text inputs inside DOM elements
-                    } else {
-                        // Server-Side Config Rejection Fallbacks
-                        showFeedback(resData.message || "Submission failed. Please check your config.", "alert-danger");
+    if (!prefersReducedMotion) {
+        revealObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        revealObserver.unobserve(entry.target);
                     }
-                })
-                .catch((error) => {
-                    // Hardware/Network offline transmittal failures
-                    showFeedback("Network error. Please check your internet connectivity.", "alert-danger");
-                    console.error("Submission error:", error);
-                })
-                .then(() => {
-                    // Restore button structural state back to active defaults smoothly
-                    submitBtn.disabled = false;
-                    btnText.innerText = "Send Message";
-                    btnIcon.innerText = "send";
-                    btnIcon.classList.remove("animation-spin-node");
                 });
+            },
+            { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+        );
+
+        // Observe all .reveal elements present at load
+        document.querySelectorAll('.reveal').forEach((el, i) => {
+            // Stagger timeline rows slightly
+            if (el.classList.contains('reveal--left')) {
+                const rows = [...document.querySelectorAll('.reveal.reveal--left')];
+                el.style.transitionDelay = `${rows.indexOf(el) * 0.08}s`;
+            }
+            revealObserver.observe(el);
         });
+
+        // Section title underline sweep
+        const titleObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        titleObserver.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.5 }
+        );
+        document.querySelectorAll('.section-title-line').forEach(el => titleObserver.observe(el));
+
+    } else {
+        // Reduced motion — show everything immediately
+        document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+        document.querySelectorAll('.section-title-line').forEach(el => el.classList.add('is-visible'));
+        // Fallback: create a no-op observer so the tab switcher doesn't crash
+        revealObserver = { observe: () => {} };
     }
 
-    // Helper utility to render response alerts with modern transition handling
-    function showFeedback(message, alertClass) {
-        responseContainer.innerText = message;
-        responseContainer.className = `mt-3 alert text-center small py-2 rounded-3 ${alertClass}`;
-        responseContainer.classList.remove("d-none");
+
+    /* ══════════════════════════════════════════════
+       4. NAVBAR SCROLL TINT
+    ══════════════════════════════════════════════ */
+    const navbar = document.querySelector('.bg-navbar');
+    if (navbar) {
+        window.addEventListener('scroll', () => {
+            navbar.style.borderBottomColor = window.scrollY > 20
+                ? 'rgba(37, 99, 235, 0.15)'
+                : '';
+        }, { passive: true });
     }
+
+
 });
