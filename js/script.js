@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     /* ══════════════════════════════════════════════
-       1. WORK — TAB SWITCHER
+       1. WORK - TAB SWITCHER
     ══════════════════════════════════════════════ */
     const tabBtns   = document.querySelectorAll('.work-tab-btn');
     const tabPanels = document.querySelectorAll('.work-tab-panel');
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ══════════════════════════════════════════════
        2. HERO CLASSES
     ══════════════════════════════════════════════ */
-    // Already applied via class names in HTML — just trigger the cursor blink
+    // Already applied via class names in HTML - just trigger the cursor blink
     const accentSpan = document.querySelector('main section:first-child h1 .text-primary');
     if (accentSpan) {
         setTimeout(() => {
@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll('.section-title-line').forEach(el => titleObserver.observe(el));
 
     } else {
-        // Reduced motion — show everything immediately
+        // Reduced motion - show everything immediately
         document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
         document.querySelectorAll('.section-title-line').forEach(el => el.classList.add('is-visible'));
         // Fallback: create a no-op observer so the tab switcher doesn't crash
